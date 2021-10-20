@@ -1,10 +1,6 @@
 import csv
 import numpy as np
 
-import sys
-sys.path.append("/usr/local/oliverlountain/Desktop/tictoc")
-from tictoc import *
-
 
 def parse_simout(file, grid_size = 512) :
     current_frame = 0
@@ -93,8 +89,13 @@ def export_for_R(last_frame, filename, density = True) :
 
 
 ## Driver -----------------------------------------------------------------------------------------------------
+# # imports
+# import os
 # import sys
-# sys.path.append("/usr/local/oliverlountain/Desktop/tictoc")
+
+# sys.path.append("~/usr/local/oliverlountain/Desktop/tictoc")
+# tictocpath = os.path.relpath("/usr/local/oliverlountain/Desktop/tictoc")
+# sys.path.insert(1, tictocpath)
 # from tictoc import *
 
 # # files
