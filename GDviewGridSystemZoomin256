@@ -1,0 +1,236 @@
+#!/usr/bin/perl -w
+##############################################################################
+use POSIX;
+use GD; #you'll need PERL GD installed
+
+###############################################################################
+
+($filename   = $ARGV[0]);
+($gridsize = $ARGV[1]);
+#we take 2 arguments from the command line, the first is the filename of the data file, the second the size of the world as specified in cudaspp
+# (-d $filename) or die "need a filename as input\n";
+#$checksize=0;
+#(-d $worldsize) or $checksize=1;#if there was no arg for size, then we need to calculate it from the data
+
+
+$imagesize=512; #the size of the resulting image in pixels. Note 11 Oct I think this results in zooming in part of the world. I haven't tested it again but I think just chaging this to 512 will produce the unzoomed picture
+
+#variables we will extract from the datafile
+$currentframe=0;
+
+#$gridsize=4096;
+$totncell=4096*4096; #unsure about this
+$nindiv=0; #the number of individuals
+$maxindiv=0;#the maxnumber of individual seen, WARNING we assume there is no variation between frame, otherwise there should be an array @nindiv so that we know precisely $nindiv[$frame]
+
+$maxX=0;
+$maxY=0;
+@x = (); #for x coords, in the form of a 2d array $x[$frame][$individual]
+@y = (); #same for y coords
+@ori = (); #same for the individuals orientation, if passed or used. Should probably depend on scale
+@ncells = ();
+@lframenb= ();
+$iframe=1; #$frame will be the time step in the simulation, $iframe is the index of that frame, i.e. if we record a frame every time steps starting at t=50, then our first entry will be $frame=50 and $iframe=1
+
+
+#### READING THE DATA FILE ###########################################################2
+
+open IN,"<$filename" or die "Impossible to open $filename!\n";
+#while we can find a line to read in the datafile
+while (<IN>)
+  {
+    @content = split " ";#we will browse the content of the datafile line and put it in contenu array
+    $firstword = shift @content;
+    next unless $firstword eq "GRID";#we skip the line if it is not a GRID line (ie otherwise it's a particle line)
+    $frame = ceil(shift @content);   #1st element of $content goes in $frame and is removed from $content
+    next unless defined($frame);#if there was nothing in the line we skip
+
+    
+    if ($frame == $currentframe)
+      { #we're still in the same frame
+	$lframenb[$iframe]=$frame;	
+	$hash[$iframe][$nindiv]=shift @content; #this is the hash numbet of this cell
+	$n[$iframe][$nindiv]=shift @content;#this is the number of locusts in this cell
+	$nindiv=$nindiv+1;#one more cell recorded
+	$ncells[$iframe]=$nindiv;#the number of cells that we have recorded this step so far
+      }
+    else
+      { #we're on the next frame ie simulation time step here
+	$currentframe=$frame;
+	$iframe=$iframe+1; 
+	$lframenb[$iframe]=$frame;	
+	$maxindiv=$nindiv;#WARNING, you will want $nindiv[$frame] instead of $maxindiv if $nindiv varies betw frames
+	$nindiv=0;
+
+	$hash[$iframe][$nindiv]=shift @content;
+	$n[$iframe][$nindiv]=shift @content;#we've shifted hash and number of locusts at this point
+	$nindiv=$nindiv+1;#one more indiv
+	$ncells[$iframe]=$nindiv
+	
+      }
+
+
+   
+  }
+close IN; ### END OF READING DATAFILE ###################################################2
+
+######################## DRAWING THE ANIMATED GIF #######################################3
+
+
+$maxnbframe=6000;#we don't want to create monster movie files, so we will decimate if necessary
+$decimatefactor=1;
+if ($maxnbframe>$iframe)
+  {
+    $decimatefactor=ceil($iframe/$maxnbframe);#need to truncate to higher int, using posix ceil()
+
+  }
+$worldsize=$gridsize;
+
+
+
+
+#$scalefactor=$imagesize/$worldsize;
+$scalefactor=1;#adjust things here if needed to zoom in for example
+$psize=ceil(0.015*$scalefactor); #this is the size of the ellipse depicting individuals #obsolete here
+
+
+
+$im = GD::Image->new($imagesize,$imagesize); #create a PERL GD image
+
+
+
+# allocate some colors #warning, PERL GD is bugged for animations and won't properly work with many colours, hence my limited palette here
+#$white = $im->colorAllocate(255,255,255);
+$black = $im->colorAllocate(0,0,0);       
+$yellow= $im->colorAllocate(255,255,0);
+$red = $im->colorAllocate(255,0,0);
+$orange = $im->colorAllocate(255,96,0);
+$white = $im->colorAllocate(255,255,255);
+
+
+# make the background transparent and interlaced
+#$im->transparent($black);
+$im->interlaced('true');
+
+
+
+#$gifdata = $im->gifanimbegin(1,1); #some commented out code to write an animated gif instead - useful but buggy
+#$gifdata   .= $im->gifanimadd;    # first frame
+
+
+
+
+$col=0;
+
+for ($iframenb=1;$iframenb<$iframe+1;$iframenb=$iframenb+$decimatefactor) #this is the main loop going through the parsed data for each simulation step we've parsed
+     
+  {
+
+    $framenb=$iframenb; #$lframenb[$iframenb];
+    
+    
+    #$frame  = GD::Image->new($im->getBounds);
+    $frame=$im;	
+	
+
+
+
+    foreach $x(0..$gridsize-1) #a quick init of the world to zero since most of them are empty and not listed in the data that was parsed
+      {
+	foreach $y(0..$gridsize-1)
+	{
+	 $density[$x][$y]=0;	    
+	}
+      }
+
+    for ($nindiv=1;$nindiv<$ncells[$framenb];$nindiv=$nindiv+1)#then we just write the actual locust numbers we saw in the parse data into our 2D grid
+	{
+	    
+	    
+	    $x=$hash[$framenb][$nindiv]%$gridsize;#this is where we turn the hash into the 2d grid coordinates
+	    $y=floor($hash[$framenb][$nindiv]/$gridsize);
+	    $density[$x][$y]=$n[$framenb][$nindiv];
+
+
+	}
+    
+  
+    # Put a black frame around the picture
+    $frame->filledRectangle(0,0,$imagesize-1,$imagesize-1,$black);
+    
+	
+   
+    foreach $x(0..$gridsize-1) #then we take our 2D array to paint our pixels
+      {
+	foreach $y(0..$gridsize-1)
+	{
+		#draw each individual as a red ellipse
+		#$frame->filledEllipse(($scalefactor*$x[$framenb][$ind])-($psize/2),($scalefactor*$y[$framenb][$ind])-($psize/2),$psize,$psize,$red);
+		if ($density[$x][$y]>1) #anything that is not empty is at least yellow here
+		{
+			$level=$density[$x][$y];
+		   
+
+			$frame->setPixel($scalefactor*$x,$scalefactor*($y-128),$yellow);
+			
+					
+			#if (($level>=4))
+			#{
+			#	$frame->setPixel($scalefactor*$x,$scalefactor*$y,$white);
+			#}
+			#if (($level<20) && ($level>=10))
+			#{
+			#	$frame->setPixel($scalefactor*$x,$scalefactor*$y,$redfour);
+			#}
+			#if (($level<100) && ($level>=50))
+			#{
+			#	$frame->setPixel($scalefactor*$x,$scalefactor*$y,$green);
+			#}
+			#if (($level<200) && ($level>=100))
+			#{
+			#	$frame->setPixel($scalefactor*$x,$scalefactor*$y,$yel);
+			#}
+			#if (($level<100) && ($level>=50))
+			#{
+			#	$frame->setPixel($scalefactor*$x,$scalefactor*$y,$redone);
+			#}18//
+			if ($level>=18) #here we are using threshold values for our colour mapping
+			{
+				$frame->setPixel($scalefactor*$x,$scalefactor*($y-128),$orange);
+			}
+			if ($level>=75)
+			{
+				$frame->setPixel($scalefactor*$x,$scalefactor*($y-128),$red);
+			}
+			
+			#$frame->setPixel($scalefactor*$x,$scalefactor*$y,$custom);
+			
+		}
+		
+
+		#add some directionnal indicator if needed here
+	}
+      }
+    
+
+    
+    #adding the frame
+    #$gifdata   .= $frame->gifanimadd(0,0,0,1,1); 
+    #print $framenb;
+    #print "\n";
+    #$frame->colorDeallocate($blue);
+    open OUT, ">$filename-$iframenb.png"; #opening the picture file
+    print OUT $frame->png;#writing our GD picture for that frame into that file
+    close OUT;#closing the image file
+    
+
+  }
+
+
+#$gifdata   .= $im->gifanimend;   # finish the animated GIF
+
+#open OUT, ">$filename.gif";
+
+
+#print OUT $gifdata;                     # write animated gif to STDOUT, so pipe or save it to file
+###########################################END OF DRAWING #################################3
