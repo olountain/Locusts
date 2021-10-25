@@ -27,3 +27,8 @@ Construct a network from your data points in $\mathbb{R}^n$, joining points if t
 1. Having established that persistence landscapes provide a summary of a point cloud, we can consider the persistence landscapes (of which we will have several for each homology group) as features for a machine learning model.
 2. We can then obtain a training set of point clouds labelled by their (qualitative) shape, and compute the persistence landscapes for each observation.
 3. Train a machine learning model on this set to classify point clouds based on their persistent homology.
+
+## Questions/concerns
+
+- Each persistence landscape is a function of the parameter $t$, and as such is stored as a vector. Therefore, for each single observation (simulation run), the set of landscapes form a large matrix (one vector for each landscape, often of length in the hundreds). How can we transform this into a usable format for a classification model? [This paper](https://www.jmlr.org/papers/volume16/bubenik15a/bubenik15a.pdf) talks about using functionals to turn the landscapes into real-valued random variables. Alternatively, [this tutorial](https://persim.scikit-tda.org/en/latest/notebooks/Persistence%20Landscapes%20and%20Machine%20Learning.html) on the Persia python package website computes the principal components of the landscapes and uses them as features for an SVM model. They suggest choosing a functional which leads to using the $L_1$ norm of the landscape as the summary statistic. I note that the persim python package allows for computing the $L_p$ norm of landscapes as well as the supremum norm ($L_{\infty}$).
+
