@@ -74,29 +74,13 @@ my_mat
 fd1 = fd.estim.isotropic(my_mat, nlags="auto"); fd1$fd
 fd2 = fd.estim.squareincr(my_mat, nlags="auto"); fd2$fd
 
+my_mat_1 <- matrix(0, 512, 512)
 
-
-return_bp <- function(){
-    num_break_points <- readline(prompt = "Enter number of break points:")
-    num_break_points <- as.integer(num_break_points)
-    while (!(num_break_points %in% c(1,2,3))) {
-        print("Number of break points must be between 1 and 3.")
-        num_break_points <- readline(prompt = "Enter number of break points:")
-        num_break_points <- as.integer(num_break_points)
-    }
-    
-    break_point_guesses <- numeric(num_break_points)
-    
-    for (i in 1:num_break_points) {
-        command <- paste("Please enter break point ", i, ": ", sep = '')
-        break_point_guesses[i] <- readline(prompt = "Enter number of break points:")
-    }
-    
-    return(break_point_guesses)
+for (i in 1:nrow(tmp2)) {
+    row <- tmp2$x[i]
+    col <- tmp2$y[i]
+    my_mat_1[row,col] <- 1
 }
 
-return_bp()
-
-
-
-
+fd3 = fd.estim.isotropic(my_mat_1, nlags="auto"); fd3$fd
+fd4 = fd.estim.squareincr(my_mat_1, nlags="auto"); fd4$fd
