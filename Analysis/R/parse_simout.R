@@ -66,7 +66,7 @@ my_mat <- matrix(0, 512, 512)
 for (i in 1:nrow(tmp2)) {
     row <- tmp2$x[i]
     col <- tmp2$y[i]
-    my_mat[row,col] <- tmp2$count[i]
+    my_mat[row,col] <- tmp2$z[i]
 }
 
 my_mat
