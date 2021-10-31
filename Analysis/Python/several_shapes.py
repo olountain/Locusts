@@ -57,6 +57,7 @@ np.savetxt("dense_squiggly_blob_data" + ".csv", dense_squiggly_blob_data, delimi
 file = "simout/pattern_ex/dense_streams/dense_streams-job-fa0.001-fr0.1-fal1.5-active2700-pause900-rproba0.001-occlu25-jumpD0.3-replicat47.simout"
 simout_dict = parse_simout(file)
 dense_streams, dense_streams_coords, dense_streams_counts = parse_last_frame(simout_dict, density = False)
+dense_streams, dense_streams_coords, dense_streams_counts = parse_mid_frame(simout_dict, density = False)
 dense_streams_data = np.hstack((dense_streams_coords, dense_streams_counts.reshape(len(dense_streams_counts),1)))
 np.savetxt("dense_streams_data" + ".csv", dense_streams_data, delimiter=",", header = "x,y,z", comments="")
 
@@ -64,6 +65,7 @@ np.savetxt("dense_streams_data" + ".csv", dense_streams_data, delimiter=",", hea
 file = "simout/pattern_ex/fanning_streams/fanning_streams-job-fa0.001-fr0.1-fal0.1-active2700-pause900-rproba0.001-occlu25-jumpD0.3-replicat6.simout"
 simout_dict = parse_simout(file)
 fanning_streams, fanning_streams_coords, fanning_streams_counts = parse_last_frame(simout_dict, density = False)
+fanning_streams, fanning_streams_coords, fanning_streams_counts = parse_mid_frame(simout_dict, density = False)
 fanning_streams_data = np.hstack((fanning_streams_coords, fanning_streams_counts.reshape(len(fanning_streams_counts),1)))
 np.savetxt("fanning_streams_data" + ".csv", fanning_streams_data, delimiter=",", header = "x,y,z", comments="")
 

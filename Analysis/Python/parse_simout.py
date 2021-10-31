@@ -68,7 +68,32 @@ def parse_last_frame(simout_dict, grid_size = 512, density = True) :
         locust_y = np.repeat(locust_y, locust_counts)
         locust_coords_all = np.array([[locust_x[i], locust_y[i]] for i in range(len(locust_x))])
 
-        return locust_coords_all
+        return (locust_coords_all, locust_coords, locust_counts)
+
+
+def parse_mid_frame(simout_dict, grid_size = 512, density = True) :
+    
+    my_hash = simout_dict["hash_val"][48]
+
+    locust_coords = np.array([[coord % grid_size, coord // grid_size] for coord in my_hash])
+    locust_counts = np.array(simout_dict["n_locusts"][-1])
+
+    if density :
+        my_dict = {
+            "locust_coords" : locust_coords,
+            "locust_counts" : locust_counts
+        }
+
+        return my_dict
+
+    else :
+        locust_x = [a[0] for a in locust_coords]
+        locust_y = [a[1] for a in locust_coords]
+        locust_x = np.repeat(locust_x, locust_counts)
+        locust_y = np.repeat(locust_y, locust_counts)
+        locust_coords_all = np.array([[locust_x[i], locust_y[i]] for i in range(len(locust_x))])
+
+        return (locust_coords_all, locust_coords, locust_counts)
 
 
 
