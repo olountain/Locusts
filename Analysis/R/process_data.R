@@ -1,5 +1,6 @@
 pacman::p_load(tidyverse,
-               fractaldim)
+               fractaldim,
+               moments)
 ## read data
 
 
@@ -29,10 +30,10 @@ get_fd(dense_fanning_blob)
 # 2.669
 
 ## dense squiggly blob
-file <- "Analysis/R/data/dense_squiggly_blob_data.csv"
-dense_squiggly_blob <- read_csv(file)
-get_fd(dense_squiggly_blob)
-# 2.45
+# file <- "Analysis/R/data/dense_squiggly_blob_data.csv"
+# dense_squiggly_blob <- read_csv(file)
+# get_fd(dense_squiggly_blob)
+# # 2.45
 
 ## dense streams
 file <- "Analysis/R/data/dense_streams_data.csv"
@@ -87,7 +88,9 @@ get_pca <- function(data){
 }
 
 
-get_summary <- function(data, thresh = 10){
+get_summary <- function(data, data_thresh = 5, thresh = 10){
+    
+    data <- data %>% filter(z > data_thresh)
     
     x_spread <- max(data$x) - min(data$x)
     y_spread <- max(data$y) - min(data$y)
@@ -101,8 +104,10 @@ get_summary <- function(data, thresh = 10){
     
     my_pca <- get_pca(data)
     
+    z_skew <- skewness(data$z)
+    
     out <- tibble(x_spread, y_spread, x_to_y = x_spread/y_spread,
-                  num_sqrs, prop_above_thresh, fractal_dim = fd)
+                  num_sqrs, prop_above_thresh, fractal_dim = fd,  z_skew)
     
     out <- bind_cols(out, my_pca)
     
@@ -115,7 +120,6 @@ data_sets <- list(comet = comet,
                   compact = compact,
                   dense_blob = dense_blob,
                   dense_fanning_blob = dense_fanning_blob,
-                  dense_squiggly_blob = dense_squiggly_blob,
                   loose_fan = loose_fan,
                   dense_streams = dense_streams,
                   fanning_streams = fanning_streams)
@@ -136,12 +140,15 @@ get_all_summaries <- function(data_sets, thresh = 10) {
 
 summs <- get_all_summaries(data_sets)
 
-summs$land_norm_0 <- c(402.729, 302.293, 314.377, 263.87, 527.477, 353.717, 148.414, 400.894)
-summs$land_norm_1 <- c(120.879, 37.158, 47.232, 61.38, 45.091, 90.509, 26.287, 130.376)
+summs$land_norm_0 <- c(402.729, 302.293, 314.377, 263.87, 353.717, 148.414, 400.894)
+summs$land_norm_1 <- c(120.879, 37.158, 47.232, 61.38, 90.509, 26.287, 130.376)
 
-summs
+summs$sup_norm_0 <- c(6.563, 10.795, 13.482, 7.89, 6.091, 7.795, 8.527)
+summs$sup_norm_1 <- c(3.411, 1.873, 2.227, 2.283, 3.29, 1.683, 4.024)
 
-corrplot::corrplot(cor(summs[,-1]))
+# summs
+
+# corrplot::corrplot(cor(summs[,-1]))
 
 ### coarsaning grid of data
 
@@ -249,43 +256,43 @@ summs_coarse
 # 
 # 
 # 
+# # 
+# size <- 128
+# comet_coarse %>% ggplot(aes(x=x, y=y, fill=z)) +
+#     geom_tile() +
+#     geom_segment(aes(x=0, xend=0, y=0, yend=size), size = 1)+
+#     geom_segment(aes(x=size, xend=size, y=0, yend=size), size = 1)+
+#     geom_segment(aes(x=0, xend=size, y=0, yend=0), size = 1)+
+#     geom_segment(aes(x=0, xend=size, y=size, yend=size), size = 1)+
+#     xlim(c(0,size)) +
+#     ylim(c(0,size)) +
+#     coord_fixed() +
+#     scale_fill_viridis_c() +
+#     theme_minimal() +
+#     theme(panel.grid = element_blank(),
+#           axis.text = element_blank(),
+#           axis.ticks = element_blank(),
+#           axis.title = element_blank(),
+#           legend.position = "none")
 # 
-size <- 128
-comet_coarse %>% ggplot(aes(x=x, y=y, fill=z)) +
-    geom_tile() +
-    geom_segment(aes(x=0, xend=0, y=0, yend=size), size = 1)+
-    geom_segment(aes(x=size, xend=size, y=0, yend=size), size = 1)+
-    geom_segment(aes(x=0, xend=size, y=0, yend=0), size = 1)+
-    geom_segment(aes(x=0, xend=size, y=size, yend=size), size = 1)+
-    xlim(c(0,size)) +
-    ylim(c(0,size)) +
-    coord_fixed() +
-    scale_fill_viridis_c() +
-    theme_minimal() +
-    theme(panel.grid = element_blank(),
-          axis.text = element_blank(),
-          axis.ticks = element_blank(),
-          axis.title = element_blank(),
-          legend.position = "none")
-
-size = 512
-fanning_streams %>% ggplot(aes(x=x, y=y, fill=z)) +
-    geom_tile() +
-    geom_segment(aes(x=0, xend=0, y=0, yend=size), size = 1)+
-    geom_segment(aes(x=size, xend=size, y=0, yend=size), size = 1)+
-    geom_segment(aes(x=0, xend=size, y=0, yend=0), size = 1)+
-    geom_segment(aes(x=0, xend=size, y=size, yend=size), size = 1)+
-    xlim(c(0,size)) +
-    ylim(c(0,size)) +
-    coord_fixed() +
-    scale_fill_viridis_c() +
-    theme_minimal() +
-    theme(panel.grid = element_blank(),
-          axis.text = element_blank(),
-          axis.ticks = element_blank(),
-          axis.title = element_blank(),
-          legend.position = "none")
-
-
-
-
+# size = 512
+# fanning_streams %>% ggplot(aes(x=x, y=y, fill=z)) +
+#     geom_tile() +
+#     geom_segment(aes(x=0, xend=0, y=0, yend=size), size = 1)+
+#     geom_segment(aes(x=size, xend=size, y=0, yend=size), size = 1)+
+#     geom_segment(aes(x=0, xend=size, y=0, yend=0), size = 1)+
+#     geom_segment(aes(x=0, xend=size, y=size, yend=size), size = 1)+
+#     xlim(c(0,size)) +
+#     ylim(c(0,size)) +
+#     coord_fixed() +
+#     scale_fill_viridis_c() +
+#     theme_minimal() +
+#     theme(panel.grid = element_blank(),
+#           axis.text = element_blank(),
+#           axis.ticks = element_blank(),
+#           axis.title = element_blank(),
+#           legend.position = "none")
+# 
+# 
+# 
+# 
