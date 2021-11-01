@@ -259,88 +259,131 @@ pers_land_comet_0.values = pers_land_comet_0.values[0:10,:]
 round(pers_land_comet_0.p_norm(1),3)
 # 402.729
 # 12005.704
+round(pers_land_comet_0.p_norm(2),3)
+# 41.293
+round(pers_land_comet_0.sup_norm(),3)
+# 6.563
+
+
 pers_land_comet_1 = PersLandscapeApprox(dgms = res_comet['dgms'], hom_deg = 1)
 pers_land_comet_1.values = pers_land_comet_1.values[0:10,:]
 round(pers_land_comet_1.p_norm(1),3)
 # 120.879
 # 485.704
+round(pers_land_comet_1.sup_norm(),3)
+# 3.411
 
 pers_land_compact_0 = PersLandscapeApprox(dgms = res_compact['dgms'], hom_deg = 0)
 pers_land_compact_0.values = pers_land_compact_0.values[0:10,:]
 round(pers_land_compact_0.p_norm(1),3)
 # 302.293
 # 2450.448
+round(pers_land_compact_0.sup_norm(),3)
+# 10.795
+
 pers_land_compact_1 = PersLandscapeApprox(dgms = res_compact['dgms'], hom_deg = 1)
 pers_land_compact_1.values = pers_land_compact_1.values[0:10,:]
 round(pers_land_compact_1.p_norm(1),3)
 # 37.158
 # 104.474
+round(pers_land_compact_1.sup_norm(),3)
+# 1.873
 
 pers_land_dense_blob_0 = PersLandscapeApprox(dgms = res_dense_blob['dgms'], hom_deg = 0)
 pers_land_dense_blob_0.values = pers_land_dense_blob_0.values[0:10,:]
 round(pers_land_dense_blob_0.p_norm(1),3)
 # 314.377
 # 3581.665
+round(pers_land_dense_blob_0.sup_norm(),3)
+# 13.482
+
 pers_land_dense_blob_1 = PersLandscapeApprox(dgms = res_dense_blob['dgms'], hom_deg = 1)
 pers_land_dense_blob_1.values = pers_land_dense_blob_1.values[0:10,:]
 round(pers_land_dense_blob_1.p_norm(1),3)
 # 47.232
 # 170.391
+round(pers_land_dense_blob_1.sup_norm(),3)
+# 2.227
 
 pers_land_dense_fanning_blob_0 = PersLandscapeApprox(dgms = res_dense_fanning_blob['dgms'], hom_deg = 0)
 pers_land_dense_fanning_blob_0.values = pers_land_dense_fanning_blob_0.values[0:10,:]
 round(pers_land_dense_fanning_blob_0.p_norm(1),3)
 # 263.87
 # 6239.08
+round(pers_land_dense_fanning_blob_0.sup_norm(),3)
+# 7.89
+
 pers_land_dense_fanning_blob_1 = PersLandscapeApprox(dgms = res_dense_fanning_blob['dgms'], hom_deg = 1)
 pers_land_dense_fanning_blob_1.values = pers_land_dense_fanning_blob_1.values[0:10,:]
 round(pers_land_dense_fanning_blob_1.p_norm(1),3)
 # 61.38
 # 268.498
+round(pers_land_dense_fanning_blob_1.sup_norm(),3)
+# 2.283
 
 pers_land_dense_squiggly_blob_0 = PersLandscapeApprox(dgms = res_dense_squiggly_blob['dgms'], hom_deg = 0)
 pers_land_dense_squiggly_blob_0.values = pers_land_dense_squiggly_blob_0.values[0:10,:]
 round(pers_land_dense_squiggly_blob_0.p_norm(1),3)
 # 527.477
 # 2613.92
+round(pers_land_dense_squiggly_blob_0.sup_norm(),3)
+# 13.702
+
 pers_land_dense_squiggly_blob_1 = PersLandscapeApprox(dgms = res_dense_squiggly_blob['dgms'], hom_deg = 1)
 pers_land_dense_squiggly_blob_1.values = pers_land_dense_squiggly_blob_1.values[0:10,:]
 round(pers_land_dense_squiggly_blob_1.p_norm(1),3)
 # 45.091
 # 99.046
+round(pers_land_dense_squiggly_blob_1.sup_norm(),3)
+# 2.656
 
 pers_land_dense_streams_0 = PersLandscapeApprox(dgms = res_dense_streams['dgms'], hom_deg = 0)
 pers_land_dense_streams_0.values = pers_land_dense_streams_0.values[0:10,:]
 round(pers_land_dense_streams_0.p_norm(1),3)
-# 778.079
-# 11286.368
+# 148.414
+# 1725.116
+round(pers_land_dense_streams_0.sup_norm(),3)
+# 7.795
+
 pers_land_dense_streams_1 = PersLandscapeApprox(dgms = res_dense_streams['dgms'], hom_deg = 1)
 pers_land_dense_streams_1.values = pers_land_dense_streams_1.values[0:10,:]
 round(pers_land_dense_streams_1.p_norm(1),3)
-# 111.984
-# 315.569
+# 26.287
+# 76.314
+round(pers_land_dense_streams_1.sup_norm(),3)
+# 1.683
 
 pers_land_fanning_streams_0 = PersLandscapeApprox(dgms = res_fanning_streams['dgms'], hom_deg = 0)
 pers_land_fanning_streams_0.values = pers_land_fanning_streams_0.values[0:10,:]
 round(pers_land_fanning_streams_0.p_norm(1),3)
-# 3049.324
-# 24138.375
+# 400.894
+# 9721.499
+round(pers_land_fanning_streams_0.sup_norm(),3)
+# 8.527
+
 pers_land_fanning_streams_1 = PersLandscapeApprox(dgms = res_fanning_streams['dgms'], hom_deg = 1)
 pers_land_fanning_streams_1.values = pers_land_fanning_streams_1.values[0:10,:]
 round(pers_land_fanning_streams_1.p_norm(1),3)
-# 190.073
-# 766.285
+# 130.376
+# 444.518
+round(pers_land_fanning_streams_1.sup_norm(),3)
+# 4.024
 
 pers_land_loose_fan_0 = PersLandscapeApprox(dgms = res_loose_fan['dgms'], hom_deg = 0)
 pers_land_loose_fan_0.values = pers_land_loose_fan_0.values[0:10,:]
 round(pers_land_loose_fan_0.p_norm(1),3)
 # 353.717
 # 10201.253
+round(pers_land_loose_fan_0.sup_norm(),3)
+# 6.091
+
 pers_land_loose_fan_1 = PersLandscapeApprox(dgms = res_loose_fan['dgms'], hom_deg = 1)
 pers_land_loose_fan_1.values = pers_land_loose_fan_1.values[0:10,:]
 round(pers_land_loose_fan_1.p_norm(1),3)
 # 90.509
 # 434.232
+round(pers_land_loose_fan_1.sup_norm(),3)
+# 3.29
 
 #### Plot H_0 landscapes
 
