@@ -16,3 +16,7 @@ for file in my_files:
     np.savetxt("processed_data/" + os.path.splitext(file)[0] + ".csv", data, delimiter=",", header = "x,y,z", comments="")
 
 toc()
+
+
+
+## might need to work out how to add functionality about which frame to parse

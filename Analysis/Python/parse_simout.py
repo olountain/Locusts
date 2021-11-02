@@ -76,7 +76,7 @@ def parse_mid_frame(simout_dict, grid_size = 512, density = True) :
     my_hash = simout_dict["hash_val"][48]
 
     locust_coords = np.array([[coord % grid_size, coord // grid_size] for coord in my_hash])
-    locust_counts = np.array(simout_dict["n_locusts"][-1])
+    locust_counts = np.array(simout_dict["n_locusts"][48])
 
     if density :
         my_dict = {
