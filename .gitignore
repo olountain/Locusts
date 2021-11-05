@@ -4,6 +4,8 @@
 *.RData
 *.Ruserdata
 *.csv
+*.txt
+*.tsv
 *.Rds
 .Rproj.user
 *.png
