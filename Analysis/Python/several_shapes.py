@@ -79,7 +79,7 @@ np.savetxt("loose_fan_data" + ".csv", loose_fan_data, delimiter=",", header = "x
 #### Compute persistence Diagrams
 
 tic()
-res_comet = ripser(comet, n_perm=500, maxdim=1) 
+res_comet = ripser(comet, n_perm=500, maxdim=1)
 toc()
 idx_perm_comet = res_comet['idx_perm']
 
