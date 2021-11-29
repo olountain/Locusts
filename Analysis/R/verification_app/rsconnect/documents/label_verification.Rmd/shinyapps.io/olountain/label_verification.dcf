@@ -1,0 +1,11 @@
+name: label_verification
+title:
+username:
+account: olountain
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5143432
+bundleId: 5265200
+url: https://olountain.shinyapps.io/label_verification/
+when: 1637214551.14198
+lastSyncTime: 1637214551.14199

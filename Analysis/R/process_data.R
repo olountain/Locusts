@@ -5,52 +5,52 @@ pacman::p_load(tidyverse,
 
 
 ## reading files
-## comet
-file <- "Analysis/R/data/comet_data.csv"
-comet <- read_csv(file)
-get_fd(comet)
-# 2.716
-
-## compact
-file <- "Analysis/R/data/compact_data.csv"
-compact <- read_csv(file)
-get_fd(compact)
-# 2.342
-
-## dense blob
-file <- "Analysis/R/data/dense_blob_data.csv"
-dense_blob <- read_csv(file)
-get_fd(dense_blob)
-# 2.681
-
-## dense fanning blob
-file <- "Analysis/R/data/dense_fanning_blob_data.csv"
-dense_fanning_blob <- read_csv(file)
-get_fd(dense_fanning_blob)
-# 2.669
-
-## dense squiggly blob
-# file <- "Analysis/R/data/dense_squiggly_blob_data.csv"
-# dense_squiggly_blob <- read_csv(file)
-# get_fd(dense_squiggly_blob)
-# # 2.45
-
-## dense streams
-file <- "Analysis/R/data/dense_streams_data.csv"
-dense_streams <- read_csv(file)
-get_fd(dense_streams)
-# 2.377
-
-## fanning streams
-file <- "Analysis/R/data/fanning_streams_data.csv"
-fanning_streams <- read_csv(file)
-get_fd(fanning_streams)
-# 2.698
-
-## loose fan
-file <- "Analysis/R/data/loose_fan_data.csv"
-loose_fan <- read_csv(file)
-get_fd(loose_fan)
+# ## comet
+# file <- "Analysis/R/data/comet_data.csv"
+# comet <- read_csv(file)
+# # get_fd(comet)
+# # 2.716
+# 
+# ## compact
+# file <- "Analysis/R/data/compact_data.csv"
+# compact <- read_csv(file)
+# # get_fd(compact)
+# # 2.342
+# 
+# ## dense blob
+# file <- "Analysis/R/data/dense_blob_data.csv"
+# dense_blob <- read_csv(file)
+# # get_fd(dense_blob)
+# # 2.681
+# 
+# ## dense fanning blob
+# file <- "Analysis/R/data/dense_fanning_blob_data.csv"
+# dense_fanning_blob <- read_csv(file)
+# # get_fd(dense_fanning_blob)
+# # 2.669
+# 
+# ## dense squiggly blob
+# # file <- "Analysis/R/data/dense_squiggly_blob_data.csv"
+# # dense_squiggly_blob <- read_csv(file)
+# # get_fd(dense_squiggly_blob)
+# # # 2.45
+# 
+# ## dense streams
+# file <- "Analysis/R/data/dense_streams_data.csv"
+# dense_streams <- read_csv(file)
+# # get_fd(dense_streams)
+# # 2.377
+# 
+# ## fanning streams
+# file <- "Analysis/R/data/fanning_streams_data.csv"
+# fanning_streams <- read_csv(file)
+# # get_fd(fanning_streams)
+# # 2.698
+# 
+# ## loose fan
+# file <- "Analysis/R/data/loose_fan_data.csv"
+# loose_fan <- read_csv(file)
+# get_fd(loose_fan)
 # 2.728
 
 ## get fractal dimension
@@ -115,14 +115,14 @@ get_summary <- function(data, data_thresh = 5, thresh = 10){
     
 }
 
-
-data_sets <- list(comet = comet,
-                  compact = compact,
-                  dense_blob = dense_blob,
-                  dense_fanning_blob = dense_fanning_blob,
-                  loose_fan = loose_fan,
-                  dense_streams = dense_streams,
-                  fanning_streams = fanning_streams)
+# 
+# data_sets <- list(comet = comet,
+#                   compact = compact,
+#                   dense_blob = dense_blob,
+#                   dense_fanning_blob = dense_fanning_blob,
+#                   loose_fan = loose_fan,
+#                   dense_streams = dense_streams,
+#                   fanning_streams = fanning_streams)
 
 get_all_summaries <- function(data_sets, thresh = 10) {
     
@@ -137,14 +137,14 @@ get_all_summaries <- function(data_sets, thresh = 10) {
         return()
     
 }
-
-summs <- get_all_summaries(data_sets)
-
-summs$land_norm_0 <- c(402.729, 302.293, 314.377, 263.87, 353.717, 148.414, 400.894)
-summs$land_norm_1 <- c(120.879, 37.158, 47.232, 61.38, 90.509, 26.287, 130.376)
-
-summs$sup_norm_0 <- c(6.563, 10.795, 13.482, 7.89, 6.091, 7.795, 8.527)
-summs$sup_norm_1 <- c(3.411, 1.873, 2.227, 2.283, 3.29, 1.683, 4.024)
+# 
+# summs <- get_all_summaries(data_sets)
+# 
+# summs$land_norm_0 <- c(402.729, 302.293, 314.377, 263.87, 353.717, 148.414, 400.894)
+# summs$land_norm_1 <- c(120.879, 37.158, 47.232, 61.38, 90.509, 26.287, 130.376)
+# 
+# summs$sup_norm_0 <- c(6.563, 10.795, 13.482, 7.89, 6.091, 7.795, 8.527)
+# summs$sup_norm_1 <- c(3.411, 1.873, 2.227, 2.283, 3.29, 1.683, 4.024)
 
 # summs
 
@@ -226,11 +226,11 @@ coarsen_all <- function(data_sets, scaling_factor = 4, as_matrix = FALSE){
     return(coarse_data_sets)
 }
 
-coarse_data_sets <- coarsen_all(data_sets)
-coarse_data_sets
-
-summs_coarse <- get_all_summaries(coarse_data_sets, thresh = 40)
-summs_coarse
+# coarse_data_sets <- coarsen_all(data_sets)
+# coarse_data_sets
+# 
+# summs_coarse <- get_all_summaries(coarse_data_sets, thresh = 40)
+# summs_coarse
 # 
 # coarse_data_sets %>%
 #     map_dfr(~ bind_rows(.), .id = "data") %>% 

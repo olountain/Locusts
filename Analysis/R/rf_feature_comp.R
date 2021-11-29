@@ -1,5 +1,5 @@
 ## imports
-pacman::p_load(tidymodels, tidyverse, themis, ranger)
+pacman::p_load(tidymodels, tidyverse, themis, ranger, rpart, tictoc)
 
 ## visualising predictors
 my_summaries_new %>% 
@@ -73,7 +73,7 @@ confusionMatrix(rf_res$.predictions[[1]]$.pred_class, reference = rf_res$.predic
 ## iterate over parameter combinations
 
 
-RF_compare_features <- function(summaries_data, n = 7, p = 4, resample = 'none') {
+RF_compare_features <- function(summaries_data, n = 7, p = 4, resample = 'none', RF = TRUE) {
     
     
     combins <- vector(mode = 'list', length = choose(7,4) + choose(7,5) + choose(7,6) + choose(7,7))
@@ -115,9 +115,17 @@ RF_compare_features <- function(summaries_data, n = 7, p = 4, resample = 'none')
         
         
         
-        rf_spec <- rand_forest() %>% 
-            set_mode("classification") %>% 
-            set_engine("ranger")
+        if (RF) {
+            rf_spec <- rand_forest() %>% 
+                set_mode("classification") %>% 
+                set_engine("ranger")    
+        } else {
+            rf_spec <- decision_tree() %>% 
+                set_mode("classification") %>% 
+                set_engine("rpart")
+        }
+        
+        
         
         rf_wf <- workflow() %>% 
             add_recipe(my_recipe) %>% 
@@ -172,6 +180,23 @@ out %>% filter(accuracy == 1) %>%
 
 best_models
 out %>% filter(accuracy > 0.97)
+
+
+
+## basic decision tree version
+tic()
+out_tree <- RF_compare_features(my_summaries_trim, resample = 'smote', RF = FALSE)
+toc()
+
+out_tree %>% ggplot(aes(y = loss, x = as.factor(n_vars))) +
+    geom_boxplot()
+
+out_tree %>% ggplot(aes(y = accuracy, x = loss, color = as.factor(n_vars))) +
+    geom_point(size = 1.5) +
+    labs(color = "Number of Features")
+
+out_tree %>% filter(accuracy == 1)
+
 
 
 ## feature selection using package from github

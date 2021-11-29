@@ -1,0 +1,227 @@
+---
+title: "Label Verification"
+# author: "Oliver Lountain"
+# date: "17/11/2021"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DT)
+library(tidyverse)
+```
+
+```{r, echo = F}
+files <- list.files('./images', ".png", full.names = T, recursive = T)
+n_files <- length(files)
+pred_classes <- readRDS('sample_classes.rds')
+```
+
+
+
+```{r, echo = F}
+actionButton("minus","Previous")
+actionButton("plus","Next")  
+
+
+x <- reactiveVal(1)
+
+
+
+# go to next image
+observeEvent(input$plus,{
+  if (x() > n_files-1){
+    x(x())
+  } else {
+    x(x()+1)
+  }
+  
+})
+# go to previous image
+observeEvent(input$minus,{
+  x(x()-1)
+  if (x() < 1) x(1)
+})
+
+## store manual labels
+classes <- reactiveVal(character(n_files))
+
+observeEvent(input$comet,{
+  tmp <- isolate(classes())
+  tmp[x()] <- "comet"
+  classes(tmp)
+    if (x() > n_files-1){
+    x(x())
+  } else {
+    x(x()+1)
+  }
+})
+observeEvent(input$compact,{
+  tmp <- isolate(classes())
+  tmp[x()] <- "compact"
+  classes(tmp)
+    if (x() > n_files-1){
+    x(x())
+  } else {
+    x(x()+1)
+  }
+})
+observeEvent(input$fan,{
+  tmp <- isolate(classes())
+  tmp[x()] <- "fan"
+  classes(tmp)
+    if (x() > n_files-1){
+    x(x())
+  } else {
+    x(x()+1)
+  }
+})
+observeEvent(input$stream,{
+  tmp <- isolate(classes())
+  tmp[x()] <- "stream"
+  classes(tmp)
+    if (x() > n_files-1){
+    x(x())
+  } else {
+    x(x()+1)
+  }
+})
+observeEvent(input$column,{
+  tmp <- isolate(classes())
+  tmp[x()] <- "column"
+  classes(tmp)
+    if (x() > n_files-1){
+    x(x())
+  } else {
+    x(x()+1)
+  }
+})
+observeEvent(input$other,{
+  tmp <- isolate(classes())
+  tmp[x()] <- "other"
+  classes(tmp)
+    if (x() > n_files-1){
+    x(x())
+  } else {
+    x(x()+1)
+  }
+})
+
+
+## yes/no version
+# classes <- reactiveVal(logical(n_files))
+
+observeEvent(input$yes,{
+  tmp <- isolate(classes())
+  tmp[x()] <- as.character(pred_classes[x()])
+  classes(tmp)
+  if (x() > n_files-1){
+    x(x())
+  } else {
+    x(x()+1)
+  }
+})
+# observeEvent(input$no,{
+#   tmp <- isolate(classes())
+#   tmp[x()] <- FALSE
+#   classes(tmp)
+#     if (x() > n_files-1){
+#     x(x())
+#   } else {
+#     x(x()+1)
+#   }
+# })
+
+
+
+
+# save results
+observeEvent(input$save, {
+  out <- data.frame(predicted = pred_classes,
+                correct = classes())
+  # write.csv(out, "saved_classes/my_data.csv")
+# out %>% 
+#   datatable(extensions = 'Buttons',
+#             options = list(dom = 'Blfrtip',
+#                            buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
+  
+  
+})
+
+
+# text output for debugging
+renderText({
+  paste('Predicted class:', pred_classes[x()])
+})
+  
+renderText(paste(x(), '/', length(pred_classes), sep = ''))
+
+
+
+renderImage({
+    filename <- files[x()]
+ 
+    # Return a list containing the filename and alt text
+    list(src = filename,
+         alt = "Image number")
+
+  }, deleteFile = FALSE)
+
+```
+
+<br>
+
+<br>
+
+```{r, echo = F}
+# yes/no version
+actionButton("yes","Correct")
+# actionButton("no","Incorrect")
+```
+
+```{r, echo = F}
+actionButton("comet","Comet")
+actionButton("compact","Compact")
+actionButton("fan","Fan")
+actionButton("stream","Stream")
+actionButton("column","Column")
+actionButton("other","Other")
+```
+
+
+<br>
+
+The table below shows the predicted classes of each image and whether it has been marked as correct or incorrect. Click the "csv" button in the top left corner of the table to download the results.
+
+```{r, echo = F}
+renderDT({
+    out <- data.frame(predicted_class = pred_classes,
+                verified_class = classes())
+    out %>% 
+      datatable(extensions = 'Buttons',
+                options = list(dom = 'Blfrtip',
+                               buttons = c('csv'),
+                               pageLength = 50))
+})
+```
+
+
+```{r, echo = F}
+# actionButton("save","Save Data")
+```
+
+```{r, echo=F}
+# downloadButton("dnld", label = "Download Data")
+# 
+# output$dnld <- downloadHandler(filename =  paste0("my_data", today, ".csv"),
+#                           content = function(file){
+#                               out <- data.frame(predicted = pred_classes, correct = classes())
+#                               write.csv(out, file)
+#                           })
+```
+
+
+
+
+
