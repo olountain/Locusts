@@ -1,10 +1,16 @@
+#### Function to get summary statistics after data has been read in python
+# If the persistent homology was computed in the python step, specify persitence = TRUE
+# here and these values will be imported as well. If you wish for the full data set
+# to be imported and stored in the R session, specify save_data = TRUE. This will make
+# the variable considerably larger. Both of these parameters are set to FALSE by default.
+
+# iport function to process individual simulation runs
 source("Analysis/R/process_data.R")
+# tidyverse and stringr are required, tictoc was just used to time the code
 pacman::p_load(tidyverse, stringr, tictoc)
 
 
-# this is to be used as a second step after the data is parsed in python
-# maybe I could add a reticulate call in here to do this...
-
+# main function
 get_all_summaries <- function(path = "processed_data", persistence = F, save_data = F) {
     csv_files <- list.files(path, ".csv", full.names = T, recursive = T)
     data_names <- list.files(path, ".csv", full.names = F, recursive = T)
