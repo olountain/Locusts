@@ -1,0 +1,98 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage[comma]{natbib}
+\usepackage{apalike} 
+\setcitestyle{aysep={,}}
+\usepackage{amsmath, amsthm, amsfonts, amssymb, amscd, bm, breqn}
+\usepackage{dsfont}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{float}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[noabbrev,capitalize]{cleveref}
+\usepackage[font=footnotesize,labelfont=bf,width=0.8\textwidth]{caption}
+\usepackage{subcaption}
+\usepackage{upgreek}
+
+
+% !TeX spellcheck = en_GB
+
+%\textwidth = 6.2 in≠
+\textheight = 9 in
+\topmargin = 0.0 in
+	\addtolength{\oddsidemargin}{-.575in}
+	\addtolength{\evensidemargin}{-.575in}
+	\addtolength{\textwidth}{1.15in}
+%\headheight = 0.0 in
+%\headsep = 0.0 in
+\parskip = 0.1in
+% \parindent = 0.2cm
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\y}{\boldsymbol{y}}
+\renewcommand{\d}{\text{d}}
+
+% \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\begin{document}
+
+% \title{Ellipsoid Criterion}
+\title{Locust Analysis Summary}
+\author{Oliver Lountain}
+
+\maketitle
+
+
+% \tableofcontents
+
+
+\section{Introduction}
+
+
+
+\section{Labelling the Shape of a Simulation}
+
+\subsection{Summary Statistics}
+
+We have used a number of summary statistics to quantitatively describe the shape of the locust swarms. The statistics were chosen to capture the qualitative differences that can be observed in the distinct swarms, and in many cases simple statistics were used to maintain interpretability. Each statistic was computed on the swarm of locusts that were present at the end of the simulation. 
+
+\subsubsection{Ratio of x-spread to y-spread}
+
+The first statistics that was used was the ratio of the x-spread to the y-spread of the swarm. That is, the distance between the smallest and largest x-coordinates of the locusts in the swarm, divided by the distance between the smallest and largest y-coordinates of the locusts in the swarm. The motivation for this arose from the clear distinction that could be seen between fan-shaped swarms, in which the y-spread was greater than the x-spread; comets, in which the x-spread was slightly greater than the y-spread; and streams and columns, in which the x-spread was substantially greater than the y-spread.
+
+\subsubsection{Number of Occupied Squares}
+
+The number of occupied squares was used as a measure of the total spread of the swarm. This could be used to distinguish the swarms which had all locusts concentrated in a small number of grid squares from those which were more spread out.
+
+\subsubsection{Skewness of Density Distribution}
+
+The skewness of the density distribution was used to distinguish the swarms which had a more even distribution of locusts than those which had locusts concentrated at the front or back of the swarm. In retrospect, it may have been better to look at the skewness of the density of x and y coordinates separately, or possibly just the x-coordinates.
+
+\subsubsection{Fractal Dimension}
+
+The fractal dimension of the swarm was also calculated. This was a less interpretable statistic but was investigated as it had been used in previous analysis. In the end it was used as it seemed to be a useful predictor in the model. 
+
+\subsection*{Unused Summary Statistics}
+
+\subsubsection{Proportion of Squares Containing a Threshold Number of Locusts}
+
+\subsubsection{Rotation Determined by PCA}
+
+\subsubsection{Persistent Homology}
+
+\subsection{Training a Model}
+
+\section{Predicting Shape from Simulation Parameters}
+
+\subsection{Training a Second Model}
+
+\section{Discussion}
+
+\end{document}
