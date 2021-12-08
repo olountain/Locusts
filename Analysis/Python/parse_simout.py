@@ -1,3 +1,7 @@
+## This script contains functions needed to parse the output of the simulation and is imported
+# by the parse_all.py script.
+
+
 import csv
 import numpy as np
 

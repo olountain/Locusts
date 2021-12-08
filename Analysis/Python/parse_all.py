@@ -1,3 +1,8 @@
+## This script will parse all the simout files in the directory and create a csv file which can then
+# be imported into R, to obtain the summary statistics of each simulation run. Set the persistence
+# variable to True if you wish to compute the persistence homology of each simulation. This, however,
+# will take a long time to run.
+
 import glob
 import numpy as np
 from persim.landscapes import PersLandscapeApprox
@@ -23,16 +28,12 @@ with Bar() as bar:
         if count % (len(my_files) // 1) == 0:
             bar.next()
 
-        
-        # if not os.path.isfile(os.path.dirname("processed_data/" + new_loc + ".csv")):
         simout_dict = parse_simout(file)
         coord_counts, coords, counts = parse_last_frame(simout_dict, density = False)
         data = np.hstack((coords, counts.reshape(len(counts),1)))
         new_loc = os.path.splitext(file)[0].split('../../')[-1]
         os.makedirs(os.path.dirname("processed_data/" + new_loc), exist_ok=True)
         np.savetxt("processed_data/" + new_loc + ".csv", data, delimiter=",", header = "x,y,z", comments="")
-
-toc()
 
         if persistence:
 
@@ -55,15 +56,4 @@ toc()
             
             np.savetxt("processed_data/" + new_loc + "_persistence.tsv", pers_out, delimiter="\t", header = "2_norm_0\tsup_norm_0\t2_norm_1\tsup_norm_1", comments="")
 
-
 toc()
-
-
-
-
-os.path.isfile(os.path.dirname("processed_data/" + new_loc + ".csv"))
-
-## might need to work out how to add functionality about which frame to parse
-
-
-os.path.splitext(tmp)[0]
