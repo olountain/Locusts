@@ -1,9 +1,24 @@
 ## In this file we produce plots of some parameter combinations to investigate how different parameters affect shape
 # run the label all data script first to obtain the rf_param_res and labeled_data variables
 
+# ensure that label_all_data script has been run
+source("Analysis/R/04_label_all_data.R")
+
 # vip plot
 vip_plot <- rf_param_res %>% extract_fit_parsnip() %>% vip()
 vip_plot
+
+
+## set file type for plots
+fig_type <- "pdf"
+if (fig_type == "pdf") {
+    save_fig <- pdf
+} else if (fig_type == "png") {
+    save_fig <- png
+} else if (fig_type == "eps") {
+    save_fig <- postscript
+    setEPS()
+}
 
 # since fa and jumpD are the most important predictors, we plot the fa against jumpD with fixed values of the other
 # parameters, and colour by class
@@ -12,7 +27,7 @@ vip_plot
 
 param_plot <- function(other = TRUE, save_plot = FALSE) {
     
-    if(!exists("i")){
+    if(!exists("i")){ # initialise integer global i
         i <<- 1
     } else if (!is.numeric(i)){
         i <<- 1
@@ -35,8 +50,8 @@ param_plot <- function(other = TRUE, save_plot = FALSE) {
     
     
     if (save_plot) {
-        png(paste("Analysis/Plots/param_combinations/" ,"fr=", fr_, "_fal=", fal_, "_rproba=", rproba_, "_pause=", pause_, "/comet_biplot.png", sep = ""),
-            width = 512, height = 512)
+        save_fig(paste("Analysis/Plots/Parameter_combinations/" ,"param_plots_fr=", fr_, "_fal=",
+                       fal_, "_rproba=", rproba_, "_pause=", pause_, "/comet_biplot.png", sep = ""))
     }
     
     if(other) {
@@ -66,3 +81,9 @@ param_plot <- function(other = TRUE, save_plot = FALSE) {
 
 
 param_plot(other = T, save_plot = F)
+
+
+
+
+
+

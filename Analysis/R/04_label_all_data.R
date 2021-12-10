@@ -1,5 +1,8 @@
 ## labelling all the data
 
+
+# ---- Prelim ----
+
 pacman::p_load(tidyverse, tidymodels, themis, rpart, ranger, caret, vip, rpart.plot)
 
 # old data set without column class
@@ -9,6 +12,17 @@ my_summaries_with_col <- readRDS(file = 'Analysis/R/data/my_summaries_with_col.r
 # data verified in app
 new_summaries <- readRDS(file = 'Analysis/R/data/verified_data_summary.rds')
 my_summaries_with_col <- bind_rows(my_summaries_with_col, new_summaries)
+
+
+use_saved_data <- TRUE
+
+if (use_saved_data) {
+    labeled_data <- readRDS(file = 'Analysis/R/data/labeled_data.rds')
+    rf_param_res <- readRDS(file = 'Analysis/R/data/rf_param_res.rds')
+    my_preds <- readRDS(file = 'Analysis/R/data/my_preds.rds')
+} else {
+    
+
 
 
 # ---- Model to label the data set based on summary statistics ----
@@ -47,7 +61,7 @@ labeled_data <-
                 replacement = "prop", matches(".pred"))
 
 # saveRDS(labeled_data, file = 'Analysis/R/data/labeled_data.rds')
-labeled_data <- readRDS(file = 'Analysis/R/data/labeled_data.rds')
+
 
 
 
@@ -78,24 +92,32 @@ rf_param_res <- workflow() %>%
     add_model(rf_param_spec) %>% 
     fit(my_train)
 
+# saveRDS(rf_param_res, file = 'Analysis/R/data/rf_param_res.rds')
+
 my_preds <- predict(rf_param_res, new_data = my_test) %>% bind_cols(my_test)
+# saveRDS(my_preds, file = 'Analysis/R/data/my_preds.rds')
 
-# confusion matrix
-my_preds %>% pull(.pred_class) %>% confusionMatrix(reference = my_test$class)
+}
 
-# vip plot
-vip_plot <- rf_param_res %>% extract_fit_parsnip() %>% vip()
-
+make_plots <- FALSE
+if (make_plots) {
+    # confusion matrix
+    my_preds %>% pull(.pred_class) %>% confusionMatrix(reference = my_test$class)
+    
+    # vip plot
+    vip_plot <- rf_param_res %>% extract_fit_parsnip() %>% vip()    
 
 
 # ---- plot of a single decision tree ----
-dt_param_spec <- decision_tree() %>% 
-    set_mode("classification") %>% 
-    set_engine("rpart")
+    dt_param_spec <- decision_tree() %>% 
+        set_mode("classification") %>% 
+        set_engine("rpart")
+    
+    dt_param_res <- workflow() %>% 
+        add_recipe(my_recipe) %>% 
+        add_model(dt_param_spec) %>% 
+        fit(my_split)
+    
+    dt_param_res$.workflow[[1]]$fit$fit$fit %>% rpart.plot()
 
-dt_param_res <- workflow() %>% 
-    add_recipe(my_recipe) %>% 
-    add_model(dt_param_spec) %>% 
-    fit(my_split)
-
-dt_param_res$.workflow[[1]]$fit$fit$fit %>% rpart.plot()
+}

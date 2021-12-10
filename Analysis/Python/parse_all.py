@@ -19,8 +19,10 @@ sys.path.insert(0, 'Analysis/Python')
 from parse_simout import *
 from helper_functions import tic, toc
 
+# this path should remain correct after handover
 my_files = glob.glob("../../Desktop/simout_files/run-121918-cuspp-couple1/fa0.03-fr3-fal1.5-active2700-pause90-rproba0.5-occlu25-jumpD0.15/**/*.simout", recursive=True)
 tic()
+# progress bar for me to ensure that it was running correctly
 count = 0
 with Bar() as bar:
     for file in my_files:
