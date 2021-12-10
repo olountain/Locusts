@@ -55,9 +55,21 @@
 
 \section{Introduction}
 
+In this analysis we have aimed to connect the input parameters of a simulation of locust dynamics to the qualitatively different shapes that these swarms can take. Specifically, we have aimed to predict shape based upon input parameters. We are interested in classifying a swarm into one of the following shapes:
+\begin{itemize}
+    \item comet,
+    \item compact,
+    \item fan,
+    \item stream,
+    \item column, and, if a swarm cannot be placed into one of these categories,
+    \item other.
+\end{itemize}
+
 
 
 \section{Labelling the Shape of a Simulation}
+
+In order to predict shape based on input parameters, we first needed to obtain a data set containing input parameters and the corresponding shape of the swarm for a number of simulation runs. Since the number of simulations is large, we first needed to develop a model to assign a shape to a swarm based on the locations of the locusts at the end of the simulation. To quantitatively measure the shape based on these locations, we considered a number of different summary statistics.
 
 \subsection{Summary Statistics}
 
@@ -79,19 +91,61 @@ The skewness of the density distribution was used to distinguish the swarms whic
 
 The fractal dimension of the swarm was also calculated. This was a less interpretable statistic but was investigated as it had been used in previous analysis. In the end it was used as it seemed to be a useful predictor in the model. 
 
+
+{\color{red}{Show some plots of two statistics against one another coloured by class.}}
+
 \subsection*{Unused Summary Statistics}
 
 \subsubsection{Proportion of Squares Containing a Threshold Number of Locusts}
 
+This was investigated as another measure of how spread out the swarm was. However, we found that this was significantly correlated with the number of occupied grid squares, and so was not used.
+
 \subsubsection{Rotation Determined by PCA}
+
+The rotation of the swarm in 2-D space was considered, though it was found that the rotation was almost always very close to zero, as the simulation had been designed to correct for any changes in direction.
 
 \subsubsection{Persistent Homology}
 
+{\color{red}{Include some persistence diagrams to show qualitatively how well this performs.}}
+
 \subsection{Training a Model}
+
+To use these summary statistics to predict the shape of a swarm, we trained a random forest. The training and testing set was obtained by manually labelling a subset of the simulations. This model was found to have 100\% accuracy on the testing set (this can be seen in the script 04\_label\_all\_data.R), and was then applied to the unlabelled simulations. To validate the model, we took a sample of the now-labelled simulations, and manually verified whether the labels were correct. This produced a new set of training data which was added to the existing set, and the model was trained again. Performance could be improved further by repeating this process.
+
+We note that since, for every combination of input parameters, the simulation was repeated 20 times, it is possible that any given parameter combination could receive different label on different runs. In particular, we note that only in 76.9\% of the unique combinations of parameters, did each of the 20 simulation runs receive the same label (this can be seen in the script 05\_check\_labels\_within\_param\_combos.R). Such instances result in the random forest described in the next section having proportions less than one assigned to parameter combinations when treated as predictor variables.
+
 
 \section{Predicting Shape from Simulation Parameters}
 
-\subsection{Training a Second Model}
+The next step in the process of predicting swarm shape from simulation parameters was to use the label the entire set of simulation runs using the first model, and then treat this labelled data set as the ground truth. We then used the parameters as predictor variables and trained a second random forest on this data set.
+
+\subsection{Model Performance}
+
+We found that the model predicted class correctly with 90.9\% accuracy (this can be seen in the script 04\_label\_all\_data.R). However, it is worth noting that this measurement of accuracy assumes that the initial labelling based on summary statistics was done perfectly. Also, the model performed worst on the other class, in particular incorrectly predicting a different label for swarms which truly belonged to the other class. This can be seen in the confusion matrix below:
+
+{\color{red}{INSERT CONFUSION MATRIX}}
+
+{\color{red}{include variable importance}}
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=1\linewidth]{../Analysis/Plots/DALEX/dalex_analysis_vip.png}
+	\caption{VIP}
+	\label{fig:vip}
+\end{figure}
+
+{\color{red}{Include some plots of fa against jumpD at different fixed values of other parameters.}}
+
+{\color{red}{Include PCA biplots}}
+
+\begin{figure}[]
+	\centering
+	\includegraphics[width=1\linewidth]{../Analysis/Plots/PCA/pca_of_parameters_comet_biplot.eps}
+	\caption{VIP}
+	\label{fig:biplot}
+\end{figure}
+
+
 
 \section{Discussion}
 
